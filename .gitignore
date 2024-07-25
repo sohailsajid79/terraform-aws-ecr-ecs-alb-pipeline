@@ -1,1 +1,7 @@
 venv/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+
+my-key-pair
+my-key-pair.pub
