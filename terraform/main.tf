@@ -112,6 +112,7 @@ resource "aws_instance" "app_server" {
               sudo systemctl start docker
               sudo systemctl enable docker
               sudo usermod -aG docker ubuntu
+              sudo reboot
               EOF
 }
 
