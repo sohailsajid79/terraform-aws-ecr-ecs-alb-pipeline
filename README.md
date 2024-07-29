@@ -27,11 +27,11 @@
 
 ## Project
 
-The project demonstrates the deployment of a simple Flask web application that hosts a Rock, Paper, Scissors game. The app is containerised using Docker and deployed to an AWS EC2 instance. The setup leverages modern DevOps tools, including Terraform for infrastructure provisioning and GitHub Actions for CI/CD automation.
+The project demonstrates the deployment of a simple Flask web application that hosts a Rock, Paper, Scissors game. The application is containerised using Docker and deployed to an AWS EC2 instance. The setup leverages modern DevOps tools, including Terraform for infrastructure provisioning and GitHub Actions for CI/CD automation.
 
-The application is a basic Flask web app built with HTML and Flask - a micro web framework written in Python. The users can play Rock, Paper, Scissors against the computer and each time a user makes a choice, the app randomly selects the computer's choice and determines the winner.
+The application is a basic Flask web app built with HTML and Flask - a micro web framework written in Python. The users can play Rock, Paper, Scissors against the computer and each time a user makes a choice, the application randomly selects the computer's choice and determines the winner.
 
-![app-demo](./assets/app%20demo.gif)
+![app-demo](./assets/demo.gif)
 
 ## Architecture
 
