@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Rock, Paper, Scissors</title>
+    <title>Showdown</title>
 
     <style>
+      /* Pure CSS Gradient Background Animation */
       body {
         font-family: Arial, Helvetica, sans-serif;
         display: flex;
@@ -13,26 +14,76 @@
         align-items: center;
         justify-content: center;
         height: 100vh;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
       }
 
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Button styling with hover effect */
       .icon-button {
         margin: 5px;
         padding: 10px 20px;
         font-size: 16px;
         border: none;
-        background: none;
+        background: #fff;
         cursor: pointer;
+        border-radius: 10px;
+        transition: transform 0.2s ease, background 0.3s ease;
+      }
+
+      .icon-button:hover {
+        transform: scale(1.1);
+        background: #f0f0f0;
       }
 
       .icon-button i {
         font-size: 50px;
+        transition: color 0.3s ease;
       }
 
+      /* Button hover icon color */
+      .icon-button:hover i {
+        color: #23a6d5;
+      }
+
+      /* Result text animation */
       #result {
         margin-top: 20px;
         font-size: 20px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+
+      /* Result text visible state */
+      #result.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Heading transition effect */
+      h1 {
+        transition: color 0.5s ease-in-out;
+      }
+
+      /* Heading color change on hover */
+      h1:hover {
+        color: #23d5ab;
       }
     </style>
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -41,44 +92,74 @@
 
   <body>
     <h1>Let's Play</h1>
-    <div>
-      <button class="icon-button" onclick="play('rock')">
+    <div id="buttons">
+      <button class="icon-button" onclick="play('Rock')" id="rockBtn">
         <i class="fas fa-hand-rock"></i>
       </button>
-      <button class="icon-button" onclick="play('paper')">
+      <button class="icon-button" onclick="play('Paper')" id="paperBtn">
         <i class="fas fa-hand-paper"></i>
       </button>
-      <button class="icon-button" onclick="play('scissors')">
+      <button class="icon-button" onclick="play('Scissors')" id="scissorsBtn">
         <i class="fas fa-hand-scissors"></i>
       </button>
-      <button class="icon-button" onclick="resetGame()">
-        <i class="fas fa-redo"></i>
-      </button>
     </div>
+    <button class="icon-button" onclick="resetGame()" id="refreshBtn">
+      <i class="fas fa-redo"></i>
+    </button>
+
     <div id="result"></div>
+
     <script>
+      let gameOver = false;
+
       function play(userChoice) {
-        const choices = ["rock", "paper", "scissors"];
+        if (gameOver) return; // Prevent further play until reset
+
+        const choices = ["Rock", "Paper", "Scissors"];
         const randomChoice =
           choices[Math.floor(Math.random() * choices.length)];
         let result = "";
 
         if (userChoice === randomChoice) {
-          result = `It's a tie! We both chose ${userChoice}.`;
+          result = `It's a tie! We both chose ${userChoice}. Click refresh to play again.`;
         } else if (
-          (userChoice === "rock" && randomChoice === "scissors") ||
-          (userChoice === "paper" && randomChoice === "rock") ||
-          (userChoice === "scissors" && randomChoice === "paper")
+          (userChoice === "Pock" && randomChoice === "Scissors") ||
+          (userChoice === "Paper" && randomChoice === "Rock") ||
+          (userChoice === "Scissors" && randomChoice === "Paper")
         ) {
-          result = `You Win! ${userChoice} beats ${randomChoice}.`;
+          result = `You Win! ${userChoice} beats ${randomChoice}. Click refresh to play again.`;
         } else {
-          result = `You Lose! ${randomChoice} beats ${userChoice}.`;
+          result = `You Lose! ${randomChoice} beats ${userChoice}. Click refresh to play again.`;
         }
-        document.getElementById("result").innerText = result;
+
+        const resultElement = document.getElementById("result");
+        resultElement.innerText = result;
+        resultElement.classList.add("visible");
+
+        // Disable further clicks until game is reset
+        gameOver = true;
+        disableButtons(true);
       }
 
       function resetGame() {
-        document.getElementById("result").innerText = "";
+        const resultElement = document.getElementById("result");
+        resultElement.innerText = "";
+        resultElement.classList.remove("visible");
+
+        // Enable playing again
+        gameOver = false;
+        disableButtons(false);
+      }
+
+      function disableButtons(disabled) {
+        document.getElementById("rockBtn").disabled = disabled;
+        document.getElementById("paperBtn").disabled = disabled;
+        document.getElementById("scissorsBtn").disabled = disabled;
+
+        const buttons = document.querySelectorAll(".icon-button");
+        buttons.forEach((button) => {
+          button.style.opacity = disabled ? "0.5" : "1";
+        });
       }
     </script>
   </body>
