@@ -6,10 +6,11 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY app.py requirements.txt static/ /app/
 
 # install dependencies without caching the packages
-RUN pip install --no-cache-dir --user -r requirements.txt
+RUN pip install --no-cache-dir --user -r requirements.txt && \
+    apk del .build-deps
 
 # step 2: final stage for production
 FROM python:3.9-alpine
@@ -19,7 +20,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH=/root/.local/bin:$PATH
 
-# install runtime dependencies
+# Install runtime dependencies
 RUN apk add --no-cache libffi
 
 WORKDIR /app
