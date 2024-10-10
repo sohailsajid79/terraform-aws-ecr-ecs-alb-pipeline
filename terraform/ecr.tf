@@ -4,4 +4,5 @@ resource "aws_ecr_repository" "rock_paper_scissors" {
   image_scanning_configuration {
     scan_on_push = true
   }
+  force_delete = true
 }

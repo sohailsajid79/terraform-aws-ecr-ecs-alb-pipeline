@@ -1,6 +1,9 @@
-name: Build, Push Docker Image to ECR, and Apply Terraform
+name: Build and Push Docker Image to ECR
 
 on:
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
     inputs:
       branch:
@@ -9,7 +12,7 @@ on:
         default: "main"
 
 jobs:
-  build_and_push:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,47 +33,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build Docker image with unique tag
+      - name: Build Docker image
         run: |
-          IMAGE_TAG=$(echo $GITHUB_SHA | head -c 7)
-          docker build -t rock-paper-scissors-app:$IMAGE_TAG .
-          docker tag rock-paper-scissors-app:$IMAGE_TAG ${{ steps.login-ecr.outputs.registry }}/rock-paper-scissors-app:$IMAGE_TAG
+          docker build -t rock-paper-scissors-app .
+          docker tag rock-paper-scissors-app:latest ${{ steps.login-ecr.outputs.registry }}/rock-paper-scissors-app:latest
 
       - name: Push Docker image to ECR
         run: |
-          IMAGE_TAG=$(echo $GITHUB_SHA | head -c 7)
-          docker push ${{ steps.login-ecr.outputs.registry }}/rock-paper-scissors-app:$IMAGE_TAG
+          docker push ${{ steps.login-ecr.outputs.registry }}/rock-paper-scissors-app:latest
 
-      - name: Output image URL and tag
+      - name: Output image URL
         run: |
-          IMAGE_TAG=$(echo $GITHUB_SHA | head -c 7)
-          echo "Image URL: ${{ steps.login-ecr.outputs.registry }}/rock-paper-scissors-app:$IMAGE_TAG"
-        id: image_tag_output
-
-  deploy_infrastructure:
-    runs-on: ubuntu-latest
-    needs: build_and_push
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.1.7
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Apply
-        run: |
-          IMAGE_TAG=$(echo $GITHUB_SHA | head -c 7)
-          terraform apply -var "image_tag=$IMAGE_TAG" -auto-approve
+          echo "Image URL: ${{ steps.login-ecr.outputs.registry }}/rock-paper-scissors-app:latest"
