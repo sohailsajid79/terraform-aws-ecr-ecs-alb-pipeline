@@ -22,7 +22,7 @@ resource "aws_route53_record" "cert_validation" {
 resource "aws_route53_record" "tm_record" {
   zone_id = data.aws_route53_zone.lab_zone.zone_id    
   name    = "app.sajid023.co.uk"                      
-  type    = "CNAME"                                   
-  ttl     = 300                                       
+  type    = "CNAME"                           
+  ttl     = 300                                     
   records = [aws_lb.rock_paper_scissors_alb.dns_name] 
 }
