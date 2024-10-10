@@ -15,10 +15,19 @@ resource "aws_lb" "rock_paper_scissors_alb" {
 
 resource "aws_lb_target_group" "rock_paper_scissors_tg" {
   name        = "rock-paper-scissors-tg"
-  port        = 3000
+  port        = 8080
   protocol    = "HTTP"
   vpc_id      = aws_vpc.ecs_vpc.id
   target_type = "ip"
+
+  health_check {
+    path                = "/"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200"
+  }
 
   tags = {
     Name = "rock-paper-scissors-tg"
@@ -31,10 +40,9 @@ resource "aws_lb_listener" "http_listener" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.rock_paper_scissors_tg.arn
-  
-  redirect {
+    type = "redirect"
+
+    redirect {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
@@ -46,8 +54,6 @@ resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.rock_paper_scissors_alb.arn
   port              = "443"
   protocol          = "HTTPS"
-  certificate_arn   = aws_acm_certificate.rock_paper_scissors_cert.arn
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
 
   default_action {
     type             = "forward"
