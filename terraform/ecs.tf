@@ -14,11 +14,14 @@ resource "aws_ecs_task_definition" "rock_paper_scissors_task" {
 
   container_definitions = jsonencode([{
     name      = "rock-paper-scissors-container"
-    image     = aws_ecr_repository.rock_paper_scissors.repository_url
+    image     = "${aws_ecr_repository.rock_paper_scissors.repository_url}:${var.image_tag}"
+    cpu       = 256
+    memory    = 512
     essential = true
     portMappings = [{
       containerPort = 8080
       hostPort      = 8080
+      protocol      = "tcp"
     }]
   }])
 }
