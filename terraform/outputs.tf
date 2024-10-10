@@ -33,22 +33,22 @@ output "internet_gateway_id" {
   value       = aws_internet_gateway.ecs_igw.id
 }
 
-output "ecs_service_security_group_id" {
-  description = "Security group ID for ECS service"
-  value       = aws_security_group.ecs_service_sg.id
-}
+# output "ecs_service_security_group_id" {
+#   description = "Security group ID for ECS service"
+#   value       = aws_security_group.ecs_service_sg.id
+# }
 
 output "alb_security_group_id" {
   description = "Security group ID for ALB"
   value       = aws_security_group.alb_sg.id
 }
 
-output "ecs_task_execution_role_arn" {
-  description = "ARN of the ECS Task Execution Role"
-  value       = aws_iam_role.ecs_task_execution_role.arn
-}
+# output "ecs_task_execution_role_arn" {
+#   description = "ARN of the ECS Task Execution Role"
+#   value       = aws_iam_role.ecs_task_execution_role.arn
+# }
 
-output "ecs_service_role_arn" {
-  description = "ARN of the ECS Service Role"
-  value       = aws_iam_role.ecs_service_role.arn
-}
+# output "ecs_service_role_arn" {
+#   description = "ARN of the ECS Service Role"
+#   value       = aws_iam_role.ecs_service_role.arn
+# }
