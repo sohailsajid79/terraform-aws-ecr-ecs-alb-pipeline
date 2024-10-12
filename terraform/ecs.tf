@@ -20,7 +20,6 @@ resource "aws_ecs_task_definition" "rock_paper_scissors_task" {
     essential = true
     portMappings = [{
       containerPort = 8080
-      hostPort      = 8080
       protocol      = "tcp"
     }]
   }])
@@ -35,7 +34,7 @@ resource "aws_ecs_service" "rock_paper_scissors_service" {
 
   network_configuration {
     subnets          = [aws_subnet.public_subnet_1.id, aws_subnet.public_subnet_2.id]
-    security_groups  = [aws_security_group.ecs_service_sg.id] # Using the new SG
+    security_groups  = [aws_security_group.ecs_service_sg.id]
     assign_public_ip = true
   }
 
@@ -45,6 +44,6 @@ resource "aws_ecs_service" "rock_paper_scissors_service" {
     container_port   = 8080
   }
 
-  depends_on = [aws_lb_listener.http_listener]
+  depends_on = [aws_lb_listener.http_listener, aws_lb_target_group.rock_paper_scissors_tg]
 }
 
