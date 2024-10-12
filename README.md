@@ -5,10 +5,11 @@ This project provides an end-to-end solution for deploying a containerised appli
 # Table of Contents
 
 1. [Project Overview](#project-overview)
-2. [Architecture](#architecture)
-3. [Prerequisites](#prerequisites)
-4. [Project Structure](#project-structure)
-5. [Setup Instructions](#setup-instructions)
+2. [App Demo](#app-demo)
+3. [Architecture](#architecture)
+4. [Prerequisites](#prerequisites)
+5. [Project Structure](#project-structure)
+6. [Setup Instructions](#setup-instructions)
 
    - [Clone Repository](#clone-repository)
    - [Configuration](#configuration)
@@ -16,12 +17,12 @@ This project provides an end-to-end solution for deploying a containerised appli
    - [Deploy Infrastructure](#deploy-infrastructure)
    - [Clean Up](#clean-up)
 
-6. [SSL/TLS Certificate Setup](#ssltls-certificate-setup)
-7. [Variables](#variables)
-8. [Outputs](#outputs)
-9. [CI/CD with GitHub Actions](#cicd-with-github-actions)
-10. [Contributing](#contributing)
-11. [License](#license)
+7. [SSL/TLS Certificate Setup](#ssltls-certificate-setup)
+8. [Variables](#variables)
+9. [Outputs](#outputs)
+10. [CI/CD with GitHub Actions](#cicd-with-github-actions)
+11. [Contributing](#contributing)
+12. [License](#license)
 
 ## Project Overview
 
@@ -32,6 +33,10 @@ This Terraform project automates the deployment of a containerised application i
 - **Application Load Balancer (ALB)**: Routes traffic to ECS services.
 - **AWS Certificate Manager (ACM)**: Manages SSL certificates.
 - **Cloudflare**: Manages DNS for custom domains.
+
+## App Demo
+
+![demonstration](./assets/demonstration.gif)
 
 ## Architecture
 
