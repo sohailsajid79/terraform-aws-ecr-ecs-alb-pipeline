@@ -40,13 +40,52 @@ This Terraform project automates the deployment of a containerised application i
 
 ## Architecture
 
-The project sets up the following AWS infrastructure:
+![graph](./assets/graph.png)
 
-- **ECR**: A private repository to store the Docker image.
-- **ECS Cluster**: Manages the Docker container running the application.
-- **ALB**: Load balancer to route traffic to the ECS cluster.
-- **ACM**: Manages SSL certificates for secure HTTPS access.
-- **Cloudflare**: Configures DNS for the subdomain (e.g. app.sajid023.co.uk).
+The project sets up the following AWS infrastructure using Terraform:
+
+1.  **ECR**
+
+    - Private Repository (`aws_ecr_repository.rock_paper_scissors`): The repository stores the Docker image for the application, ensuring secure and scalable storage for container image.
+
+2.  **ECS**
+
+    - ECS Cluster (`aws_ecs_cluster.rock_paper_scissors_cluster`): The cluster manages the Docker container running the rock-paper-scissors app.
+    - **Task Definition** (`aws_ecs_task_definition.rock_paper_scissors_task`): Specifies the Docker container details, such as the image, memory, CPU requirements, and networking settings.
+    - ECS Service (`aws_ecs_service.rock_paper_scissors_service`): Ensures the specified number of task instances are running, and integrates with the ALB to route traffic to the Docker container.
+
+3.  **ALB**
+
+    - Load Balancer (`aws_lb.rock_paper_scissors_alb`): Distributes incoming traffic across multiple instances of the application, ensuring availability and scalability.
+    - Target Group (`aws_lb_target_group.rock_paper_scissors_tg`): Manages the routing of requests to the ECS service. It monitors the health of tasks and redirects traffic to healthy targets.
+    - Listeners (`aws_lb_listener.http_listener`, `aws_lb_listener.https_listener`): Listens for HTTP and HTTPS traffic, ensuring both secure and non-secure communication to the application.
+
+4.  **ACM**
+
+    - SSL Certificate (`aws_acm_certificate.rock_paper_scissors_cert`): Ensures secure communication via HTTPS by managing SSL certificates. The ALB uses this certificate to encrypt traffic.
+    - Certificate Validation (`aws_acm_certificate_validation.rock_paper_scissors_cert_validation`): Automates the process of validating the SSL certificate via DNS, ensuring that the certificate is trusted.
+
+5.  **Cloudflare**
+
+    - DNS Configuration (`cloudflare_record.app_subdomain, cloudflare_record.acm_validation`): Manages DNS records for the subdomain `app.sajid023.co.uk`, pointing traffic to the AWS load balancer and validating SSL certificates via Cloudflare's DNS.
+    - Subdomain Setup (`data.cloudflare_zone.sajid023_zone`): Ensures the subdomain for the application is correctly configured and pointing to the ALB.
+
+6.  **Networking**
+
+    - VPC (`aws_vpc.ecs_vpc`): The Virtual Private Cloud isolates the application infrastructure, providing security and control over network traffic.
+    - Subnets (`aws_subnet.public_subnet_1`, `aws_subnet.public_subnet_2`): These public subnets allow the ECS service to interact with the internet through the ALB.
+    - Internet Gateway (`aws_internet_gateway.ecs_igw`): Connects the VPC to the internet, enabling inbound and outbound traffic to the public subnets.
+    - Route Tables and Associations: Ensure that traffic from the internet can reach the resources in the public subnets via the Internet Gateway.
+
+7.  **Security Groups**
+
+    - ALB Security Group (`aws_security_group.alb_sg`): Controls inbound and outbound traffic to the Application Load Balancer, ensuring that only HTTP and HTTPS is allowed.
+    - ECS Security Group (`aws_security_group.ecs_service_sg`): Restricts traffic to the ECS service to ensure secure communication between the load balancer and the ECS tasks.
+
+8.  **IAM Roles and Policies**
+    - IAM Role for ECS Task Execution (`aws_iam_role.ecs_task_execution_role`): Grants ECS tasks permissions to pull the image from ECR and interact with other AWS resources.
+    - IAM Role for ECS Service (`aws_iam_role.ecs_service_role`): Manages permissions for the ECS service, enabling it to interact with the ALB and other AWS services.
+    - IAM Policies and Attachments: Policies attached to the IAM roles ensure that the ECS tasks and services have the necessary permissions to operate securely within the environment.
 
 ## Prerequisites
 
