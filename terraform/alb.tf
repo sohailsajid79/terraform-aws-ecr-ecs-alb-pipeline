@@ -44,3 +44,15 @@ resource "aws_lb_listener" "http_listener" {
     target_group_arn = aws_lb_target_group.rock_paper_scissors_tg.arn
   }
 }
+
+resource "aws_lb_listener" "https_listener" {
+  load_balancer_arn = aws_lb.rock_paper_scissors_alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.rock_paper_scissors_cert.arn
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.rock_paper_scissors_tg.arn
+  }
+}

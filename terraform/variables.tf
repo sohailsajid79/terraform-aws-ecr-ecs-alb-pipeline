@@ -3,7 +3,14 @@ variable "region" {
   default     = "eu-north-1"
 }
 
-# variable "image_tag" {
-#   description = "The tag of the Docker image to deploy"
-#   default     = "latest"
-# }
+variable "cloudflare_email" {
+  description = "Email address for Cloudflare account"
+  sensitive   = true
+
+}
+
+variable "cloudflare_api_key" {
+  description = "API key for Cloudflare account"
+  sensitive   = true
+
+}
